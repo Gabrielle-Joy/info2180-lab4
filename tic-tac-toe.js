@@ -10,24 +10,28 @@ const boxElementsArray = document.getElementById("board").querySelectorAll("div"
 boxElementsArray.forEach(box => box.classList.add("square"));
 
 // Add an X or O to a square when clicked 
-const sqArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+let sqArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let i = 0;
 let turn = 0;
+let change = true;
 boxElementsArray.forEach(box => {
     box.setAttribute("id", i);
     i++;
     box.addEventListener("click", () => {
         boxID = box.getAttribute("id");
-        if (turn%2===0) {
+        (box.textContent === "") ? change = true : change = false;
+        if (turn%2===0 && change) {
             box.textContent = 'X';
             sqArray[boxID] = 1;
             box.classList.add("X");
-        } else {
+            turn++;
+        } else if (turn%2!==0 && change) {
             box.textContent = 'O';
             sqArray[boxID] = -1;
             box.classList.add("O");
+            turn++;
         } 
-        turn++; console.log(sqArray);
+        console.log(sqArray);
         if (i > 4) {
             winner();
         }
@@ -46,6 +50,7 @@ boxElementsArray.forEach(box => box.addEventListener("mouseout", () => {
 
 /*Check for the winner and update the
 status*/
+
 /*
 0 1 2
 3 4 5
@@ -61,15 +66,6 @@ wins:
 1 4 7
 2 5 8
 */
-// id0 = boxElementsArray[0].getAttribute("id");
-// id1 = boxElementsArray[1].getAttribute("id");
-// id2 = boxElementsArray[2].getAttribute("id");
-// id3 = boxElementsArray[3].getAttribute("id");
-// id4 = boxElementsArray[4].getAttribute("id");
-// id5 = boxElementsArray[5].getAttribute("id");
-// id6 = boxElementsArray[6].getAttribute("id");
-// id7 = boxElementsArray[7].getAttribute("id");
-// id8 = boxElementsArray[8].getAttribute("id");
 
 function winner() {
 
@@ -96,6 +92,19 @@ function winner() {
 
 }
 // Restart the game
+const button = document.getElementsByClassName("btn")[0];
+button.addEventListener("click", () => {
+    sqArray = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    console.log(sqArray);
+    boxElementsArray.forEach(box => {
+        box.classList.remove("X") || box.classList.remove("O");
+        box.textContent = '';
+    });
+    const congratsMes = document.getElementById("status");
+    congratsMes.textContent = 'Move your mouse over a square and click to play an X or an O';
+    congratsMes.classList.remove('you-won');
+    turn = 0;
+});
 
 
 // Disallow Cheating
